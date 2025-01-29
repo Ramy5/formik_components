@@ -1,26 +1,57 @@
 import React from "react";
+import Input from "./Input";
+import Textarea from "./Textarea";
+import Select from "./Select";
+import Radio from "./Radio";
+import Checkbox from "./Checkbox";
+import Date from "./Date";
 
-const FormikControls = (props) => {
-  const { control } = props;
+interface IFormikControlsWithoutSelect {
+  control: "input" | "textarea" | "radio" | "checkbox" | "date" | "select";
+  type?: string;
+  label: string;
+  name: string;
+  [key: string]: unknown;
+}
 
+interface IFormikControlsWithSelect extends IFormikControlsWithoutSelect {
+  options: Array<{ value: string; key: string }>;
+}
+
+type TFormikControls = IFormikControlsWithoutSelect | IFormikControlsWithSelect;
+
+const FormikControls = ({ control, ...rest }: TFormikControls) => {
   switch (control) {
     case "input":
-      return <input {...props} />;
+      return <Input {...rest} />;
     case "textarea":
-      return <textarea {...props} />;
+      return <Textarea {...rest} />;
     case "select":
-      return <select {...props} />;
+      return (
+        <Select
+          {...rest}
+          options={(rest as IFormikControlsWithSelect).options}
+        />
+      );
     case "radio":
-      return <div></div>;
+      return (
+        <Radio
+          {...rest}
+          options={(rest as IFormikControlsWithSelect).options}
+        />
+      );
     case "checkbox":
-      return <div></div>;
+      return (
+        <Checkbox
+          {...rest}
+          options={(rest as IFormikControlsWithSelect).options}
+        />
+      );
     case "date":
-      return <div></div>;
+      return <Date {...rest} />;
     default:
       return null;
   }
-
-  return <div></div>;
 };
 
 export default FormikControls;
